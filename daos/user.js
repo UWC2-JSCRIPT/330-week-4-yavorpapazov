@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const uuid = require('uuid')
 
 const User = require('../models/user');
+const Token = require('../models/token');
 
 module.exports = {};
 
@@ -53,11 +54,19 @@ module.exports.getUser = async (userEmail) => {
     return user
 }
 
-
-module.exports.makeTokenForUserId = () => {
-  //console.log(userId)
+module.exports.makeTokenForUserId = async (userId) => {
   const token = uuid.v4()
-  return token
+  const created = await Token.create({ userId, token });
+  return created.token
+}
+
+module.exports.getUserIdFromToken = async (tokenString) => {
+  const tokenRecord = await Token.findOne({ token: tokenString }).lean();
+  if (tokenRecord) {
+    return tokenRecord.userId
+  } else {
+    return undefined
+  }
 }
 
 class BadDataError extends Error {};

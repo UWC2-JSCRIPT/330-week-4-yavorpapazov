@@ -40,9 +40,37 @@ router.post("/", async (req, res, next) => {
             if (!result) {
                 res.status(401).send("password doesn't match")
             } else {
-                const userToken = userDAO.makeTokenForUserId()
+                const userToken = await userDAO.makeTokenForUserId(user._id)
                 res.json({ token: userToken });
             }
+        } catch(e) {
+            if (e instanceof userDAO.BadDataError) {
+                res.status(400).send(e.message);
+            } else {
+                res.status(500).send(e.message);
+            }
+        }
+    }
+});
+
+router.use(async function (req, res, next) {
+    const tokenString = req.headers.authorization.slice(7)
+    const userId = await userDAO.getUserIdFromToken(tokenString)
+    if (userId) {
+        req.userId = userId;
+    }
+    next();
+})
+
+router.post("/password", async (req, res, next) => {
+    if (!req.body.password || JSON.stringify(req.body.password) === '' ) {
+        res.status(400).send('password is required');
+    } else if (!req.userId) {
+        res.status(401).send("token doesn't match")
+    } else {
+        try {
+            console.log(req.userId)
+            res.sendStatus(200)
         } catch(e) {
             if (e instanceof userDAO.BadDataError) {
                 res.status(400).send(e.message);
