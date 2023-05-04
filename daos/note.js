@@ -1,8 +1,8 @@
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-// const Book = require('../models/book');
+const Note = require('../models/note');
 
-// module.exports = {};
+module.exports = {};
 
 // module.exports.getSearch = async (page, perPage, query) => { 
 //   if (query) {
@@ -64,17 +64,10 @@
 //   return true;
 // }
 
-// module.exports.create = async (bookData) => {
-//   try {
-//     const created = await Book.create(bookData);
-//     return created;
-//   } catch (e) {
-//     if (e.message.includes('validation failed')) {
-//       throw new BadDataError(e.message);
-//     }
-//     throw e;
-//   }
-// }
+module.exports.createNote = async (note) => {
+    const created = await Note.create(note);
+    return created;
+}
 
 // class BadDataError extends Error {};
 // module.exports.BadDataError = BadDataError;

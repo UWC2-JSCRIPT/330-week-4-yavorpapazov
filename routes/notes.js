@@ -1,11 +1,25 @@
-// const { Router } = require("express");
-// const router = Router();
+const { Router } = require("express");
+const router = Router();
 
-// const bookDAO = require('../daos/book');
+const noteDAO = require('../daos/note');
+const userDAO = require('../daos/user');
 
-// // Create
-// router.post("/", async (req, res, next) => {
-//   const book = req.body;
+router.use(async function (req, res, next) {
+    const tokenString = req.headers.authorization.slice(7)
+    const userId = await userDAO.getUserIdFromToken(tokenString)
+    if (userId) {
+        req.userId = userId;
+    }
+    next();
+})
+
+router.post("/", async (req, res, next) => {
+    const note = {
+        text: req.body.text,
+        userId: req.userId
+    }
+    const savedNote = await noteDAO.createNote(note);
+    res.json(savedNote);
 //   if (!book || JSON.stringify(book) === '{}' ) {
 //     res.status(400).send('book is required');
 //   } else {
@@ -20,7 +34,7 @@
 //       }
 //     }
 //   }
-// });
+});
 
 // router.get("/search", async (req, res, next) => {
 //   let { page, perPage, query } = req.query;
@@ -86,4 +100,4 @@
 //   }
 // });
 
-// module.exports = router;
+module.exports = router;
