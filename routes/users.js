@@ -69,8 +69,27 @@ router.post("/password", async (req, res, next) => {
         res.status(401).send("token doesn't match")
     } else {
         try {
-            console.log(req.userId)
-            res.sendStatus(200)
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const success = await userDAO.updateUserPassword(req.userId, hashedPassword);
+            res.sendStatus(success ? 200 : 401);
+        } catch(e) {
+            if (e instanceof userDAO.BadDataError) {
+                res.status(400).send(e.message);
+            } else {
+                res.status(500).send(e.message);
+            }
+        }
+    }
+});
+
+router.post("/logout", async (req, res, next) => {
+    if (!req.userId) {
+        res.status(401).send("token doesn't match")
+    } else {
+        try {
+            const tokenString = req.headers.authorization.slice(7)
+            const success = await userDAO.removeToken(tokenString);
+            res.sendStatus(success ? 200 : 401);
         } catch(e) {
             if (e instanceof userDAO.BadDataError) {
                 res.status(400).send(e.message);
