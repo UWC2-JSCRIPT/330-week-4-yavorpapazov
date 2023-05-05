@@ -19,6 +19,3 @@ module.exports.getNote = async (userId, noteId) => {
 module.exports.getUserNotes = async (userId) => {
     return await Note.find({ userId }).lean();
 }
-
-// class BadDataError extends Error {};
-// module.exports.BadDataError = BadDataError;
