@@ -34,13 +34,6 @@ module.exports = {};
 //   ])
 // }
 
-// module.exports.getAll = async (page, perPage, authorId) => {
-//   if (authorId) {
-//     return await Book.find({ authorId: new mongoose.Types.ObjectId(authorId) }).limit(perPage).skip(perPage*page).lean();
-//   }
-//   return await Book.find().limit(perPage).skip(perPage*page).lean();
-// }
-
 // module.exports.getById = (bookId) => {
 //   if (!mongoose.Types.ObjectId.isValid(bookId)) {
 //     return null;
@@ -48,25 +41,17 @@ module.exports = {};
 //   return Book.findOne({ _id: bookId }).lean();
 // }
 
-// module.exports.deleteById = async (bookId) => {
-//   if (!mongoose.Types.ObjectId.isValid(bookId)) {
-//     return false;
-//   }
-//   await Book.deleteOne({ _id: bookId });
-//   return true;
-// }
-
-// module.exports.updateById = async (bookId, newObj) => {
-//   if (!mongoose.Types.ObjectId.isValid(bookId)) {
-//     return false;
-//   }
-//   await Book.updateOne({ _id: bookId }, newObj);
-//   return true;
-// }
-
 module.exports.createNote = async (note) => {
     const created = await Note.create(note);
     return created;
+}
+
+module.exports.getNote = async (userId, noteId) => {
+    return await Note.find({ _id: noteId, userId }).lean();
+}
+
+module.exports.getUserNotes = async (userId) => {
+    return await Note.find({ userId }).lean();
 }
 
 // class BadDataError extends Error {};
