@@ -20,11 +20,7 @@ router.post("/signup", async (req, res, next) => {
                 res.json(savedUser);
             }
         } catch(e) {
-            if (e instanceof userDAO.BadDataError) {
-                res.status(400).send(e.message);
-            } else {
-                res.status(500).send(e.message);
-            }
+            res.status(400).send(e.message);
         }
     }
 });
@@ -43,11 +39,7 @@ router.post("/", async (req, res, next) => {
                 res.json({ token: userToken });
             }
         } catch(e) {
-            if (e instanceof userDAO.BadDataError) {
-                res.status(400).send(e.message);
-            } else {
-                res.status(401).send(e.message);
-            }
+            res.status(401).send(e.message);
         }
     }
 });
@@ -78,11 +70,7 @@ router.post("/password", async (req, res, next) => {
             const success = await userDAO.updateUserPassword(req.userId, hashedPassword);
             res.sendStatus(success ? 200 : 401);
         } catch(e) {
-            if (e instanceof userDAO.BadDataError) {
-                res.status(400).send(e.message);
-            } else {
-                res.status(500).send(e.message);
-            }
+            res.status(400).send(e.message);
         }
     }
 });
@@ -96,11 +84,7 @@ router.post("/logout", async (req, res, next) => {
             const success = await userDAO.removeToken(tokenString);
             res.sendStatus(success ? 200 : 401);
         } catch(e) {
-            if (e instanceof userDAO.BadDataError) {
-                res.status(400).send(e.message);
-            } else {
-                res.status(500).send(e.message);
-            }
+            res.status(400).send(e.message);
         }
     }
 });

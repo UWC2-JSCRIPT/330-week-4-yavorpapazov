@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const router = Router();
-
 const noteDAO = require('../daos/note');
 const userDAO = require('../daos/user');
 

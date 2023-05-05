@@ -1,34 +1,25 @@
-const mongoose = require('mongoose');
 const uuid = require('uuid')
-
 const User = require('../models/user');
 const Token = require('../models/token');
 
 module.exports = {};
 
 module.exports.createUser = async (userData, userEmail) => {
-  try {
-    const exist = await User.findOne({ email: userEmail }).lean();
-    if (exist) {
-      return 'exists'
-    }
-    const created = await User.create(userData);
-    return created;
-  } catch (e) {
-    if (e.message.includes('validation failed')) {
-      throw new BadDataError(e.message);
-    }
-    throw e;
+  const exist = await User.findOne({ email: userEmail }).lean();
+  if (exist) {
+    return 'exists'
   }
+  const created = await User.create(userData);
+  return created;
 }
 
 module.exports.getUser = async (userEmail) => {
-    const user = await User.findOne({ email: userEmail }).lean();
-    return user
+  const user = await User.findOne({ email: userEmail }).lean();
+  return user
 }
 
 module.exports.makeTokenForUserId = async (userId) => {
-  const token = uuid.v4()
+  const token = uuid.v4();
   const created = await Token.create({ userId, token });
   return created.token
 }
@@ -51,6 +42,3 @@ module.exports.removeToken = async (tokenString) => {
   await Token.deleteOne({ token: tokenString });
   return true
 }
-
-class BadDataError extends Error {};
-module.exports.BadDataError = BadDataError;
