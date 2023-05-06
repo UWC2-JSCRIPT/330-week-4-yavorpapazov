@@ -20,7 +20,7 @@ router.post("/signup", async (req, res, next) => {
                 res.json(savedUser);
             }
         } catch(e) {
-            res.status(400).send(e.message);
+            res.status(500).send(e.message);
         }
     }
 });
@@ -70,7 +70,7 @@ router.post("/password", async (req, res, next) => {
             const success = await userDAO.updateUserPassword(req.userId, hashedPassword);
             res.sendStatus(success ? 200 : 401);
         } catch(e) {
-            res.status(400).send(e.message);
+            res.status(500).send(e.message);
         }
     }
 });
@@ -84,7 +84,7 @@ router.post("/logout", async (req, res, next) => {
             const success = await userDAO.removeToken(tokenString);
             res.sendStatus(success ? 200 : 401);
         } catch(e) {
-            res.status(400).send(e.message);
+            res.status(500).send(e.message);
         }
     }
 });
